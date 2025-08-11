@@ -13,23 +13,13 @@
 <body>
 <div class="container">
 
-  <!-- ▼ 折りたたみ可能な工事名ヘッダー -->
-  <details id="headerControls" class="block collapsible" open>
-    <summary class="collapsible-summary">
-      <span class="chev" aria-hidden="true">▸</span>
-      <span class="title">工事名</span>
-      <span id="currentSiteLabel" class="current-site"></span>
-      <span class="summary-hint">（タップ/クリックで開閉）</span>
-    </summary>
-
-    <div class="controls collapsible-content" style="margin-bottom:26px">
-      <label>現場名:</label>
-      <input id="siteName" class="siteName" placeholder="例：〇〇号線">
-      <button class="btn" onclick="addSite()">追加</button>
-      <button class="btn" onclick="renameSite()">名称変更</button>
-      <select id="siteList" onchange="switchSite()"></select>
-    </div>
-  </details>
+  <div class="block controls" style="margin-bottom:26px">
+    <label>現場名:</label>
+    <input id="siteName" class="siteName" placeholder="例：〇〇号線">
+    <button class="btn" onclick="addSite()">追加</button>
+    <button class="btn" onclick="renameSite()">名称変更</button>
+    <select id="siteList" onchange="switchSite()"></select>
+  </div>
 
   <!-- タブ（動的生成） -->
   <div class="tabs" id="tabsArea"></div>
@@ -153,7 +143,7 @@
   <div id="panelDemo" class="block hidden">
     <h4>取り壊し工</h4>
     <button class="btn" onclick="addRow('demo')">行追加</button>
-    <div id="demoTable" style="overflow-x:auto%;">
+    <div id="demoTable" style="overflow-x:auto;">
       <div class="scroll-x-guide">(横スクロール可)</div>
       <table>
         <thead>
@@ -230,7 +220,7 @@
         <label>コンクリート：<input id="pricePaveConcrete" data-price-work="pave_concrete" type="text" inputmode="decimal" pattern="[0-9.+-]*" class="numeric" oninput="editPrice('pave_concrete', this.value)" onblur="editPrice('pave_concrete', this.value, true)" onkeydown="if(event.key==='Enter') this.blur();"></label>
       </div>
       <div class="price-group">
-        <h5>縁石</h5>
+        <!-- ※ 見出し(縁石)は削除しました。項目のみ -->
         <label>標準アスカーブ：<input id="priceCurbStd" data-price-work="curb_std" type="text" inputmode="decimal" pattern="[0-9.+-]*" class="numeric" oninput="editPrice('curb_std', this.value)" onblur="editPrice('curb_std', this.value, true)" onkeydown="if(event.key==='Enter') this.blur();"></label>
         <label>小型アスカーブ：<input id="priceCurbSmall" data-price-work="curb_small" type="text" inputmode="decimal" pattern="[0-9.+-]*" class="numeric" oninput="editPrice('curb_small', this.value)" onblur="editPrice('curb_small', this.value, true)" onkeydown="if(event.key==='Enter') this.blur();"></label>
         <label>手盛アスカーブ：<input id="priceCurbHand" data-price-work="curb_hand" type="text" inputmode="decimal" pattern="[0-9.+-]*" class="numeric" oninput="editPrice('curb_hand', this.value)" onblur="editPrice('curb_hand', this.value, true)" onkeydown="if(event.key==='Enter') this.blur();"></label>
@@ -240,11 +230,11 @@
         <label>区画線設置 外側線：<input id="priceSafetyLineOuter" data-price-work="safety_line_outer" type="text" inputmode="decimal" pattern="[0-9.+-]*" class="numeric" oninput="editPrice('safety_line_outer', this.value)" onblur="editPrice('safety_line_outer', this.value, true)" onkeydown="if(event.key==='Enter') this.blur();"></label>
         <label>区画線設置 停止線：<input id="priceSafetyLineStop" data-price-work="safety_line_stop" type="text" inputmode="decimal" pattern="[0-9.+-]*" class="numeric" oninput="editPrice('safety_line_stop', this.value)" onblur="editPrice('safety_line_stop', this.value, true)" onkeydown="if(event.key==='Enter') this.blur();"></label>
         <label>区画線設置 文字記号：<input id="priceSafetyLineSymbol" data-price-work="safety_line_symbol" type="text" inputmode="decimal" pattern="[0-9.+-]*" class="numeric" oninput="editPrice('safety_line_symbol', this.value)" onblur="editPrice('safety_line_symbol', this.value, true)" onkeydown="if(event.key==='Enter') this.blur();"></label>
-        <label>交通誘導員B：<input id="priceSafetyTrafficB" data-price-work="safety_traffic_b" type="text" inputmode="decimal" pattern="[0-9.+-]*" class="numeric" oninput="editPrice('safety_traffic_b', this.value)" onblur="editPrice('safety_traffic_b', this.value, true)" onkeydown="if(event.key==='Enter') this.blur();"></label>
-        <label>仮設信号機：<input id="priceSafetyTempSignal" data-price-work="safety_temp_signal" type="text" inputmode="decimal" pattern="[0-9.+-]*" class="numeric" oninput="editPrice('safety_temp_signal', this.value)" onblur="editPrice('safety_temp_signal', this.value, true)" onkeydown="if(event.key==='Enter') this.blur();"></label>
       </div>
       <div class="price-group">
         <h5>その他</h5>
+        <label>交通誘導員B：<input id="priceSafetyTrafficB" data-price-work="safety_traffic_b" type="text" inputmode="decimal" pattern="[0-9.+-]*" class="numeric" oninput="editPrice('safety_traffic_b', this.value)" onblur="editPrice('safety_traffic_b', this.value, true)" onkeydown="if(event.key==='Enter') this.blur();"></label>
+        <label>仮設信号機：<input id="priceSafetyTempSignal" data-price-work="safety_temp_signal" type="text" inputmode="decimal" pattern="[0-9.+-]*" class="numeric" oninput="editPrice('safety_temp_signal', this.value)" onblur="editPrice('safety_temp_signal', this.value, true)" onkeydown="if(event.key==='Enter') this.blur();"></label>
         <label>重機運搬費：<input id="priceOtherMachineTrans" data-price-work="other_machine_transport" type="text" inputmode="decimal" pattern="[0-9.+-]*" class="numeric" oninput="editPrice('other_machine_transport', this.value)" onblur="editPrice('other_machine_transport', this.value, true)" onkeydown="if(event.key==='Enter') this.blur();"></label>
       </div>
     </div>
@@ -281,7 +271,8 @@
   <button id="calcButton" class="calc-fab" onclick="openCalc()">🖩</button>
   <div id="calcOverlay" class="calc-overlay hidden" onclick="if(event.target.id==='calcOverlay') closeCalc()">
     <div class="calc-dialog" onclick="event.stopPropagation()">
-      <input id="calcInput" type="text" onkeydown="calcKey(event)" placeholder="0" inputmode="decimal" pattern="[0-9.+\-*/()]*">
+      <!-- ここを inputmode='none' にして、スマホでキーボードを出さない -->
+      <input id="calcInput" type="text" onkeydown="calcKey(event)" placeholder="0" inputmode="none" pattern="[0-9.+\-*/()]*">
       <div class="calc-keypad">
         <button class="calc-key" onclick="calcInsert('7')">7</button>
         <button class="calc-key" onclick="calcInsert('8')">8</button>
