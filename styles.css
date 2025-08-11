@@ -265,4 +265,38 @@ table input { min-width: 120px; }
   }
   .tabs { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 8px; }
   .block { margin: 10px 0; padding: 8px 6px; display:flex; flex-direction: column; }
-  .block labe
+  .block label { display:block; margin-right:0; margin-bottom:6px; }
+  table, .ss-table { width: auto; min-width: 650px; display: block; font-size: 14px; overflow-x:auto; }
+  input, select { padding: 10px 8px; width: 100% !important; max-width: none; margin-bottom:10px; font-size: 14px; }
+  .btn { width:100%; margin:8px 0; padding:12px; font-size:16px; }
+  .siteName { width: 100% !important; max-width: none; }
+  .numeric { width: 100% !important; min-width: 100px; }
+  .controls { flex-direction: column; align-items: stretch; }
+  .controls select, .controls button { margin-left:0; }
+}
+
+/* 電卓 */
+.calc-keypad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 10px;
+}
+.calc-key {
+  padding: 14px 0;
+  font-size: 1.2em;
+  background: #f0f0f3;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+.calc-key:active { background: #dcdce0; }
+.calc-equal {
+  grid-column: span 4;
+  background: #007aff;
+  color: #fff;
+}
+@media (max-width: 480px) {
+  .calc-key { padding: 18px 0; font-size: 1.4em; }
+}
