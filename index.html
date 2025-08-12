@@ -340,12 +340,12 @@
   <script src="js/main.js"></script>
 
   <!-- Service Worker -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=1');
-      });
-    }
-  </script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js?v=9'); // ← 数字を上げる
+    });
+  }
+</script>
 </body>
 </html>
