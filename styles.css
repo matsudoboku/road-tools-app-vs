@@ -215,22 +215,35 @@ table input { min-width: 120px; }
   align-items: flex-start;
   margin-bottom: 6px;
 }
+
+/* 単価設定：見出しを1行占有して次の行から入力群を並べる */
 #panelPrice > div {
   display: flex;
   flex-direction: column;
   gap: 14px;
   align-items: flex-start;
 }
-.price-group {
+#panelPrice .price-group {
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-start;
   gap: 10px;
-  align-items: center;
 }
-#panelPrice h5 {
-  margin: 0 0 4px 0;
-  font-size: 1.05em;
-  color: #007aff;
+#panelPrice .price-group > h5 {
+  flex: 0 0 100%;
+  margin: 0 0 6px 0;
+}
+
+/* 縁石の3項目は非表示（モバイル対応のためCSSで隠す） */
+label:has(#priceCurbStd),
+label:has(#priceCurbSmall),
+label:has(#priceCurbHand){
+  display: none !important;
+}
+
+/* （使わない場合の保険：クラスで丸ごと隠す） */
+#panelPrice .price-group--curb {
+  display: none !important;
 }
 
 .scroll-x-guide {
@@ -351,22 +364,7 @@ table input { min-width: 120px; }
 @media (max-width: 480px) {
   .calc-key { padding: 18px 0; font-size: 1.4em; }
 }
-/* 単価設定：見出しを1行占有して次の行から入力群を並べる */
-#panelPrice .price-group {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 10px;
-}
-#panelPrice .price-group > h5 {
-  flex: 0 0 100%;
-  margin: 0 0 6px 0; /* 下に少し余白 */
-}
 
-/* （オプション）縁石ブロックをCSSだけで隠す場合 */
-#panelPrice .price-group--curb {
-  display: none !important;
-}
 /* ---- Collapsible header (現場) ---- */
 .block-collapsible .block-head{
   display:flex; align-items:center; justify-content:space-between;
@@ -380,5 +378,12 @@ table input { min-width: 120px; }
   color:#007aff; font-weight:700; padding:6px 10px; border-radius:10px;
   cursor:pointer; line-height:1;
 }
-.block-collapsible.collapsed .block-body{ display:none; }
-.block-collapsible.collapsed .collapse-btn{ transform:rotate(-90deg); }
+.block-collapsible .block-body{
+  display:block;
+}
+.block-collapsible.collapsed .block-body{
+  display:none;
+}
+.block-collapsible.collapsed .collapse-btn{
+  transform: rotate(-90deg);
+}
