@@ -205,38 +205,28 @@ table input { min-width: 120px; }
   align-items: flex-start;
   margin-bottom: 6px;
 }
+
+/* 単価設定：見出しの次の行から入力を並べる */
 #panelPrice > div {
   display: flex;
-  flex-direction: column;
-  gap: 14px;
-  align-items: flex-start;
-}
-
-/* ▼ ここからレイアウト修正（見出しの次の行に項目を配置） */
-.price-group {
-  display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
-  gap: 10px;
-  align-items: flex-start; /* 見出しより下にラベルを揃える */
+  gap: 10px 12px;
+  align-items: center;
+  margin-bottom: 14px;
 }
 #panelPrice h5 {
   margin: 0 0 4px 0;
   font-size: 1.05em;
   color: #007aff;
+  flex-basis: 100%; /* 改行ポイント：ここで見出しが1行占有 */
 }
-/* 見出しは一行を占有して、その下に項目が来る */
-.price-group h5 {
-  flex: 0 0 100%;
-  width: 100%;
-  display: block;
+#panelPrice .price-group.plain h5 {
+  color: #445; /* 縁石など、青を外したい見出しに .plain を付ける */
 }
-/* 電卓：スマホでreadonly時の見た目 */
-.calc-dialog input[readonly] {
-  background: #f8fafd;
-  cursor: default;
-}
-/* ▲ ここまでレイアウト修正 */
+.price-group label { margin-right: 6px; }
 
+/* 横スクロールガイド */
 .scroll-x-guide {
   text-align: right;
   color: #aaa;
@@ -247,6 +237,64 @@ table input { min-width: 120px; }
   overflow-x: auto;
   white-space: nowrap;
 }
+
+/* === Calculator (FAB + Modal) =================================== */
+.calc-fab{
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 1000;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: #007aff;
+  color: #fff;
+  font-size: 22px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.18);
+  cursor: pointer;
+}
+.calc-overlay{
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center; /* 中央寄せ */
+  justify-content: center; /* 中央寄せ */
+  background: rgba(0,0,0,.35);
+  z-index: 1000;
+}
+.calc-dialog{
+  width: min(520px, 92vw);
+  max-height: 90dvh;
+  overflow: auto;
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+}
+.calc-keypad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 10px;
+}
+.calc-key {
+  padding: 14px 0;
+  font-size: 1.2em;
+  background: #f0f0f3;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+.calc-key:active { background: #dcdce0; }
+.calc-equal {
+  grid-column: span 4;
+  background: #007aff;
+  color: #fff;
+}
+
+/* レスポンシブ */
 @media (max-width: 900px) {
   .container {padding: 5px;}
   .block {padding: 8px;}
@@ -273,30 +321,4 @@ table input { min-width: 120px; }
   .numeric { width: 100% !important; min-width: 100px; }
   .controls { flex-direction: column; align-items: stretch; }
   .controls select, .controls button { margin-left:0; }
-}
-
-/* 電卓 */
-.calc-keypad {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-  margin-top: 10px;
-}
-.calc-key {
-  padding: 14px 0;
-  font-size: 1.2em;
-  background: #f0f0f3;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  cursor: pointer;
-  user-select: none;
-}
-.calc-key:active { background: #dcdce0; }
-.calc-equal {
-  grid-column: span 4;
-  background: #007aff;
-  color: #fff;
-}
-@media (max-width: 480px) {
-  .calc-key { padding: 18px 0; font-size: 1.4em; }
 }
