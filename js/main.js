@@ -24,10 +24,16 @@
     const focus = St.nextFocus;
     renderAll();
     App.Storage.saveData();
-    if(focus){
+    if (focus) {
       const selector = `[data-type="${focus.type}"][data-idx="${focus.idx}"][data-key="${focus.key}"]`;
       const el = document.querySelector(selector);
-      if(el){ el.focus(); if(el.setSelectionRange){ const len = el.value.length; el.setSelectionRange(len, len); } }
+      if (el) {
+        el.focus();
+        if (el.setSelectionRange) {
+          const len = el.value.length;
+          el.setSelectionRange(len, len);
+        }
+      }
     }
   }
 
@@ -37,7 +43,9 @@
     renderAllAndSave();
   }
 
-  function saveAndUpdate(update=true){ App.Storage.saveAndUpdate(update); }
+  function saveAndUpdate(update = true) {
+    App.Storage.saveAndUpdate(update);
+  }
 
   // Expose to window for inline handlers compatibility
   window.addRow = App.Tables.addRow;
@@ -77,22 +85,30 @@
     renderAll();
     App.UI.renderTabs();
     App.Tables.updateZatsuNameList();
+
+    // 単価の端末共通初期値保存（入力中に保存）
     document.querySelectorAll('input[data-price-work]').forEach(el => {
       el.addEventListener('input', App.Prices.savePrices);
     });
+
+    // ← 追加：ヘッダ（現場名ブロック）の折りたたみ初期化を最後に呼ぶ
+    if (window.App && App.UI && typeof App.UI.initControlsCollapse === 'function') {
+      App.UI.initControlsCollapse();
+    }
   });
+
   // Optional: set default demo thickness when type changes (only if current value is empty or 0)
   window.updateDemoThickDefault = function(){
     const typeEl = document.getElementById('demoType');
     const thickEl = document.getElementById('demoThick');
-    if(!typeEl || !thickEl) { App.Storage.saveAndUpdate(true); return; }
+    if (!typeEl || !thickEl) { App.Storage.saveAndUpdate(true); return; }
     const current = parseFloat(thickEl.value || '0');
-    if(!current){ // set sensible defaults if not entered yet
+    if (!current) { // set sensible defaults if not entered yet
       const t = typeEl.value;
       let d = 0;
-      if(t === 'As') d = 5;
-      else if(t === 'Con') d = 10;
-      else if(t === 'As+Con') d = 10;
+      if (t === 'As') d = 5;
+      else if (t === 'Con') d = 10;
+      else if (t === 'As+Con') d = 10;
       thickEl.value = d;
     }
     App.Storage.saveAndUpdate(true);
