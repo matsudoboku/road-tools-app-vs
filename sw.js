@@ -1,5 +1,5 @@
 // sw.js
-const CACHE_NAME = 'road-tools-cache-v9';
+const CACHE_NAME = 'road-tools-cache-v1';
 const ASSETS = [
   './',
   './index.html',
