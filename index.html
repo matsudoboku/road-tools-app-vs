@@ -13,13 +13,23 @@
 <body>
 <div class="container">
 
-  <div class="block controls" style="margin-bottom:26px">
-    <label>現場名:</label>
-    <input id="siteName" class="siteName" placeholder="例：〇〇号線">
-    <button class="btn" onclick="addSite()">追加</button>
-    <button class="btn" onclick="renameSite()">名称変更</button>
-    <select id="siteList" onchange="switchSite()"></select>
+<section id="controlsBlock" class="block block--controls block-collapsible">
+  <div class="block-head">
+    <h4 class="block-title">現場</h4>
+    <button id="controlsToggle" class="collapse-btn" aria-expanded="true" aria-controls="controlsBody" title="最小化/展開">⯆</button>
   </div>
+
+  <div id="controlsBody" class="block-body">
+    <div class="controls" style="margin-bottom:6px">
+      <label>現場名:</label>
+      <input id="siteName" class="siteName" placeholder="例：〇〇号線">
+      <button class="btn" onclick="addSite()">追加</button>
+      <button class="btn" onclick="renameSite()">名称変更</button>
+      <select id="siteList" onchange="switchSite()"></select>
+    </div>
+  </div>
+</section>
+
 
   <!-- タブ（動的生成） -->
   <div class="tabs" id="tabsArea"></div>
