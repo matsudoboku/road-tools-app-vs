@@ -87,3 +87,37 @@
 
   App.UI = { renderTabs, showTab, renderWorksChk, saveWorksChk, updateSiteList };
 })();
+// ---- Collapsible Controls (現場ヘッダー) ----
+(function(){
+  const App = window.App || (window.App = {});
+  const UI = App.UI || (App.UI = {});
+  const LS_KEY = 'ui_controls_collapsed_v1';
+
+  function applyCollapsedState(collapsed){
+    const block = document.getElementById('controlsBlock');
+    const btn   = document.getElementById('controlsToggle');
+    if(!block || !btn) return;
+    block.classList.toggle('collapsed', !!collapsed);
+    btn.setAttribute('aria-expanded', (!collapsed).toString());
+    try{ localStorage.setItem(LS_KEY, JSON.stringify(!!collapsed)); }catch(_){}
+  }
+
+  function initControlsCollapse(){
+    const block = document.getElementById('controlsBlock');
+    const btn   = document.getElementById('controlsToggle');
+    if(!block || !btn) return;
+
+    // restore
+    let collapsed = false;
+    try{ collapsed = JSON.parse(localStorage.getItem(LS_KEY) || 'false'); }catch(_){}
+    applyCollapsedState(collapsed);
+
+    // toggle
+    btn.addEventListener('click', ()=>{
+      const now = !block.classList.contains('collapsed');
+      applyCollapsedState(now);
+    });
+  }
+
+  UI.initControlsCollapse = initControlsCollapse;
+})();
