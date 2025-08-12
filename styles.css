@@ -351,3 +351,19 @@ table input { min-width: 120px; }
 @media (max-width: 480px) {
   .calc-key { padding: 18px 0; font-size: 1.4em; }
 }
+/* 単価設定：見出しを1行占有して次の行から入力群を並べる */
+#panelPrice .price-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 10px;
+}
+#panelPrice .price-group > h5 {
+  flex: 0 0 100%;
+  margin: 0 0 6px 0; /* 下に少し余白 */
+}
+
+/* （オプション）縁石ブロックをCSSだけで隠す場合 */
+#panelPrice .price-group--curb {
+  display: none !important;
+}
