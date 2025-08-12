@@ -367,3 +367,18 @@ table input { min-width: 120px; }
 #panelPrice .price-group--curb {
   display: none !important;
 }
+/* ---- Collapsible header (現場) ---- */
+.block-collapsible .block-head{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:8px;
+}
+.block-collapsible .block-title{
+  margin:0; font-size:1.06em; color:#007aff; font-weight:700;
+}
+.collapse-btn{
+  appearance:none; border:1px solid #e2e6f0; background:#f3f7ff;
+  color:#007aff; font-weight:700; padding:6px 10px; border-radius:10px;
+  cursor:pointer; line-height:1;
+}
+.block-collapsible.collapsed .block-body{ display:none; }
+.block-collapsible.collapsed .collapse-btn{ transform:rotate(-90deg); }
