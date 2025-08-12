@@ -4,8 +4,8 @@
 
   function renderAll() {
     App.UI.renderWorksChk();
-    App.Settings.renderEarthSetting();
-    App.Settings.renderDemoSetting();
+    App.Settings && App.Settings.renderEarthSetting && App.Settings.renderEarthSetting();
+    App.Settings && App.Settings.renderDemoSetting && App.Settings.renderDemoSetting();
     App.Tables.renderTablePave();
     App.Tables.renderTableEarth();
     App.Parts.renderEarthResult();
@@ -82,9 +82,42 @@
     App.Storage.loadData();
     App.Prices.loadPrices();
 
-    // 既定値注入（初回描画前）
-    if (App.Settings && typeof App.Settings.ensureWorkDefaults === 'function') {
-      App.Settings.ensureWorkDefaults();
-    }
+    // 初期ロード時：土工/取壊工のデフォルトが表示されるよう、最初にタブ再描画で適用
+    App.UI.updateSiteList();
+    App.UI.renderTabs(); // ← renderTabs 内でデフォルト適用 & renderAllAndSave()
 
-    App.UI.up
+    App.Tables.updateZatsuNameList();
+
+    // 単価の端末共通初期値保存（入力中に保存）
+    document.querySelectorAll('input[data-price-work]').forEach((el) => {
+      el.addEventListener('input', App.Prices.savePrices);
+    });
+
+    // 現場ヘッダの折りたたみ
+    if (window.App && App.UI && typeof App.UI.initControlsCollapse === 'function') {
+      App.UI.initControlsCollapse();
+    }
+  });
+
+  // 種別変更時は常に 4/10/14 を反映（初期も4cmにしたい要件に対応）
+  window.updateDemoThickDefault = function () {
+    const typeEl = document.getElementById('demoType');
+    const thickEl = document.getElementById('demoThick');
+    if (!typeEl || !thickEl) {
+      App.Storage.saveAndUpdate(true);
+      return;
+    }
+    const t = typeEl.value || 'As';
+    const d = t === 'As' ? 4 : t === 'Con' ? 10 : 14;
+    thickEl.value = d;
+
+    // stateへ反映
+    const site = App.State.allSites[App.State.currentSite] || {};
+    site.demoSetting = site.demoSetting || {};
+    site.demoSetting.type = t;
+    site.demoSetting.thick = d;
+
+    App.Storage.saveAndUpdate(true);
+    App.UI.renderTabs();
+  };
+})();
