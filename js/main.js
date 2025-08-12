@@ -1,4 +1,4 @@
-(function(){
+(function () {
   const App = window.App || (window.App = {});
   const St = App.State;
 
@@ -47,7 +47,7 @@
     App.Storage.saveAndUpdate(update);
   }
 
-  // Expose to window for inline handlers compatibility
+  // expose
   window.addRow = App.Tables.addRow;
   window.editRow = App.Tables.editRow;
   window.showTab = App.UI.showTab;
@@ -81,38 +81,10 @@
   window.addEventListener('DOMContentLoaded', () => {
     App.Storage.loadData();
     App.Prices.loadPrices();
-    App.UI.updateSiteList();
-    renderAll();
-    App.UI.renderTabs();
-    App.Tables.updateZatsuNameList();
 
-    // 単価の端末共通初期値保存（入力中に保存）
-    document.querySelectorAll('input[data-price-work]').forEach(el => {
-      el.addEventListener('input', App.Prices.savePrices);
-    });
-
-    // ← 追加：ヘッダ（現場名ブロック）の折りたたみ初期化を最後に呼ぶ
-    if (window.App && App.UI && typeof App.UI.initControlsCollapse === 'function') {
-      App.UI.initControlsCollapse();
+    // 既定値注入（初回描画前）
+    if (App.Settings && typeof App.Settings.ensureWorkDefaults === 'function') {
+      App.Settings.ensureWorkDefaults();
     }
-  });
 
-  // Optional: set default demo thickness when type changes (only if current value is empty or 0)
-  window.updateDemoThickDefault = function(){
-    const typeEl = document.getElementById('demoType');
-    const thickEl = document.getElementById('demoThick');
-    if (!typeEl || !thickEl) { App.Storage.saveAndUpdate(true); return; }
-    const current = parseFloat(thickEl.value || '0');
-    if (!current) { // set sensible defaults if not entered yet
-      const t = typeEl.value;
-      let d = 0;
-      if (t === 'As') d = 5;
-      else if (t === 'Con') d = 10;
-      else if (t === 'As+Con') d = 10;
-      thickEl.value = d;
-    }
-    App.Storage.saveAndUpdate(true);
-    App.UI.renderTabs();
-  };
-
-})();
+    App.UI.up
