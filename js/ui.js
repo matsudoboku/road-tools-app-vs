@@ -39,14 +39,49 @@
   function renderTabs() {
     if (St.currentSite && St.allSites[St.currentSite]) saveWorksChk();
 
-    // 既定値を注入（土工・取壊ON時に「舗装面積と同じ」や厚さを自動セット）
-    if (App.Settings && typeof App.Settings.ensureWorkDefaults === 'function') {
-      App.Settings.ensureWorkDefaults();
+    // ★ ここで「土工/取壊工」チェック時にデフォルトを必ず適用
+    const site = St.allSites[St.currentSite] || (St.allSites[St.currentSite] = {});
+    site.works = site.works || {};
+    site.earthSetting = site.earthSetting || {};
+    site.demoSetting = site.demoSetting || {};
+
+    // 土工ONなら「舗装面積と同じ」=ON、掘削厚=10cm を常に反映（UIにも出す）
+    if ($('chkWorksEarth')?.checked) {
+      if (site.earthSetting.same !== true) site.earthSetting.same = true;
+      const es = $('earthSamePave');
+      if (es) es.checked = true;
+
+      site.earthSetting.thick = 10;
+      const et = $('earthThick');
+      if (et) et.value = 10;
+
+      if (!site.earthSetting.type) site.earthSetting.type = '標準掘削';
+      const etype = $('earthType');
+      if (etype && !etype.value) etype.value = site.earthSetting.type;
+    }
+
+    // 取壊工ONなら「舗装面積と同じ」=ON、厚さは種別に応じ 4/10/14 cm（UIにも出す）
+    if ($('chkWorksDemo')?.checked) {
+      if (site.demoSetting.same !== true) site.demoSetting.same = true;
+      const ds = $('demoSamePave');
+      if (ds) ds.checked = true;
+
+      // 種別はUIの値優先、無ければ既存 or 'As'
+      const typeInUI = $('demoType')?.value;
+      const type = typeInUI || site.demoSetting.type || 'As';
+      site.demoSetting.type = type;
+      if ($('demoType') && $('demoType').value !== type) $('demoType').value = type;
+
+      const thick = type === 'As' ? 4 : type === 'Con' ? 10 : 14; // As+Con=14
+      site.demoSetting.thick = thick;
+      const dt = $('demoThick');
+      if (dt) dt.value = thick;
     }
 
     const earthSame = $('earthSamePave')?.checked;
     const demoSame = $('demoSamePave')?.checked;
 
+    // タブの表示制御
     let tabHtml = '';
     worksList.forEach((w) => {
       const chkEl = $(w.chk);
@@ -74,7 +109,6 @@
     });
     if (firstActive) showTab(firstActive.id);
 
-    // 変更：保存＆全体再描画
     App.Main.renderAllAndSave();
   }
 
