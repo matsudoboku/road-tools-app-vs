@@ -1,7 +1,9 @@
+// js/events.js
 (function(){
   const App = window.App || (window.App = {});
-  const St = App.State;
+  const St = App.State || {};
 
+  // 入力フォーカス移動
   function handleKey(e){
     if(e.key === 'Enter' || e.key === 'Tab'){
       e.preventDefault();
@@ -16,94 +18,71 @@
       e.target.blur();
     }
   }
-
   function handlePointerDown(e){
     const t = e.target.closest('input[data-idx], select[data-idx]');
     if(t){ St.nextFocus = { type:t.dataset.type, idx:t.dataset.idx, key:t.dataset.key }; }
     else { St.nextFocus = null; }
   }
 
-  // ===== 電卓 =====
+  // 電卓（スマホでキーボード非表示 + モーダル中央）
+  function isMobile(){ return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); }
+
   function openCalc(){
     const overlay = document.getElementById('calcOverlay');
-    const input = document.getElementById('calcInput');
-    const result = document.getElementById('calcResult');
-    if (!overlay || !input) return;
-
+    if(!overlay) return;
     overlay.classList.remove('hidden');
-    if (result) result.textContent = '';
 
-    const IS_MOBILE = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-
-    if (IS_MOBILE) {
-      // モバイル：ソフトキーボードを出さない
-      input.setAttribute('readonly', 'readonly');
-      input.setAttribute('inputmode', 'none');
-      input.blur();
-    } else {
-      // デスクトップ：通常どおりフォーカス可
-      input.removeAttribute('readonly');
-      input.focus();
+    // スマホはフォーカスしない（キーボード回避）
+    if(!isMobile()){
+      const input = document.getElementById('calcInput');
+      if(input) input.focus();
     }
+    // 背景スクロールを止める
+    document.body.style.overflow = 'hidden';
+    const r = document.getElementById('calcResult');
+    if(r) r.textContent = '';
   }
-
   function closeCalc(){
     const overlay = document.getElementById('calcOverlay');
-    if (overlay) overlay.classList.add('hidden');
+    if(!overlay) return;
+    overlay.classList.add('hidden');
+    // 背景スクロールを戻す
+    document.body.style.overflow = '';
   }
-
   function calcInsert(char){
     const input = document.getElementById('calcInput');
-    if(input){
-      input.value += char;
-      // readonly でも値は反映される。モバイルは blur のままでOK
-    }
+    if(!input) return;
+    input.value += char;
   }
-
   function calcClear(){
     const input = document.getElementById('calcInput');
     const r = document.getElementById('calcResult');
-    if(input) input.value='';
-    if(r) r.textContent='';
+    if(input) input.value = '';
+    if(r) r.textContent = '';
   }
-
   function calcCalculate(){
+    const out = document.getElementById('calcResult');
     try{
-      const v = document.getElementById('calcInput')?.value || '';
-      // eslint-disable-next-line no-eval
+      const v = (document.getElementById('calcInput')?.value || '');
       const r = eval(v);
-      const out = document.getElementById('calcResult');
-      if(out) out.textContent = (r ?? '') + '';
+      if(out) out.textContent = r;
     }catch(err){
-      const out = document.getElementById('calcResult');
       if(out) out.textContent = 'Error';
     }
   }
-
   function calcKey(e){
-    if(e.key==='Enter') calcCalculate();
+    if(e.key === 'Enter') calcCalculate();
+    if(e.key === 'Escape') closeCalc();
   }
 
   document.addEventListener('pointerdown', handlePointerDown, true);
+  document.addEventListener('keydown', calcKey);
 
-  // 公開
-  App.Events = {
+  App.Events = Object.assign(App.Events || {}, {
     handleKey, handlePointerDown,
-    openCalc, closeCalc,
-    calcInsert, calcClear, calcCalculate, calcKey
-  };
+    openCalc, closeCalc, calcInsert, calcClear, calcCalculate, calcKey
+  });
 
-  // HTML の inline ハンドラ（onclick="openCalc()"など）からも使えるように
-  Object.assign(window, App.Events);
+  // inline 呼び出し対応
+  Object.assign(window, { openCalc, closeCalc, calcInsert, calcClear, calcCalculate, calcKey });
 })();
-
-// Escキーで電卓を閉じる（安全参照）
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    const overlay = document.getElementById('calcOverlay');
-    if (overlay && !overlay.classList.contains('hidden')) {
-      if (window.closeCalc) window.closeCalc();
-      else if (window.App && window.App.Events && window.App.Events.closeCalc) window.App.Events.closeCalc();
-    }
-  }
-});
